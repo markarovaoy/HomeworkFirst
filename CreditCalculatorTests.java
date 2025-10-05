@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -69,11 +71,11 @@ public class CreditCalculatorTests {
         $("#rate").setValue("17");
         $("#calculate-btn").click();
         //SelenideElement modalWindow = $(By.xpath("./*[text()='Идёт расчёт, подождите...']")).shouldBe(visible);
-        sleep(6_000);
+        //sleep(6_000);
+        $("#result-amount").shouldBe(visible, Duration.ofSeconds(20));
         $("h1").shouldNotBe(visible);
         $("h2").shouldBe(visible);
         $("h2").shouldHave(text("Результаты расчёта"));
-        $("#result-amount").shouldBe(visible);
         $("#result-amount").shouldHave(text("300000"));
         $("#result-term").shouldBe(visible);
         $("#result-term").shouldHave(text("6"));
@@ -86,10 +88,13 @@ public class CreditCalculatorTests {
         $("#overpayment").shouldBe(visible);
         $("#total-payment").shouldBe(visible);
         $("#show-schedule-btn").click();
-        Selenide.switchTo().window("График платежей");
+        //Selenide.switchTo().window("График платежей");
+        switchTo().window(1);
         $("h2").shouldBe(visible);
         $("h2").shouldHave(text("График платежей"));
-        $("table").$("tbody").$$("tr").get(6).$$("td").get(4).equals("0");
+
+        //$("table").$("tbody").$$("tr").get(6).$$("td").get(4).equals("0");
+        $x("//tr[7]/td[5]").shouldHave(text("0.00"));
         Selenide.closeWindow();
         Selenide.switchTo().window("Калькулятор кредита");
         $("#new-calculation-btn").click();
@@ -102,11 +107,11 @@ public class CreditCalculatorTests {
         $x("//*[@value='diff']").click();
         $("#calculate-btn").click();
         //SelenideElement modalWindow = $(By.xpath("./*[text()='Идёт расчёт, подождите...']")).shouldBe(visible);
-        sleep(6_000);
+        $("#result-amount").shouldBe(visible, Duration.ofSeconds(20));
+        //sleep(6_000);
         $("h1").shouldNotBe(visible);
         $("h2").shouldBe(visible);
         $("h2").shouldHave(text("Результаты расчёта"));
-        $("#result-amount").shouldBe(visible);
         $("#result-amount").shouldHave(text("300000"));
         $("#result-term").shouldBe(visible);
         $("#result-term").shouldHave(text("6"));
@@ -124,7 +129,8 @@ public class CreditCalculatorTests {
         Selenide.switchTo().window("График платежей");
         $("h2").shouldBe(visible);
         $("h2").shouldHave(text("График платежей"));
-        $("table").$("tbody").$$("tr").get(6).$$("td").get(4).equals("0");
+        $x("//tr[7]/td[5]").shouldHave(text("0.00"));
+        //$("table").$("tbody").$$("tr").get(6).$$("td").get(4).equals("0");
         Selenide.closeWindow();
         Selenide.switchTo().window("Калькулятор кредита");
         $("#new-calculation-btn").click();
@@ -137,9 +143,8 @@ public class CreditCalculatorTests {
         $("#term").setValue("12");
         $("#rate").setValue("15.5");
         $("#calculate-btn").click();
-        $("#results-container").shouldBe(exist);
-        sleep(6_000);
-        $("#result-amount").shouldBe(visible);
+        $("#result-amount").shouldBe(visible, Duration.ofSeconds(20));
+        //sleep(6_000);
         $("#result-amount").shouldHave(text(summa));
         $("#result-term").shouldBe(visible);
         $("#result-term").shouldHave(text("12"));
